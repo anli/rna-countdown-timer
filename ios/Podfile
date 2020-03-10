@@ -36,6 +36,9 @@ target 'CountdownTimer' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  use_frameworks!
+  pod 'RNInputMask', :path => '../node_modules/react-native-text-input-mask/ios/InputMask'
+
   target 'CountdownTimerTests' do
     inherit! :search_paths
     # Pods for testing
