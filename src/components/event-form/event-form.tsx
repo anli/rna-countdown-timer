@@ -1,5 +1,7 @@
 import {Button, DateInput, TextInput, TimeInput} from '@ui';
-import {FormikProps, withFormik} from 'formik';
+import {FormikErrors, FormikProps, withFormik} from 'formik';
+import moment, {Moment} from 'moment';
+import * as R from 'ramda';
 import React from 'react';
 import {HelperText} from 'react-native-paper';
 import styled from 'styled-components/native';
@@ -84,6 +86,22 @@ const initialValues: FormValueProps = {
   date: '',
   time: '',
 };
+
+const getDateMoment = (
+  date: string | undefined,
+  time: string | undefined,
+): Moment | undefined => {
+  if (!R.isEmpty(date) && !R.isEmpty(time)) {
+    return moment(`${date}T${time}`, 'YYYY-MM-DDTHH:mm');
+  }
+
+  if (!R.isEmpty(date) && R.isEmpty(time)) {
+    return moment(`${date}`, 'YYYY-MM-DD');
+  }
+
+  return undefined;
+};
+
 const EventForm = withFormik<EventFormProps, FormValueProps>({
   mapPropsToValues: () => initialValues,
   handleSubmit: (values: FormValueProps, {props}) => {
@@ -91,6 +109,16 @@ const EventForm = withFormik<EventFormProps, FormValueProps>({
     onSubmit(values);
   },
   validationSchema: EventSchema,
+  validate: (values: FormValueProps) => {
+    let errors: FormikErrors<FormValueProps> = {};
+
+    const dateMoment = getDateMoment(values.date, values.time);
+    if (dateMoment && dateMoment.isBefore()) {
+      errors.date = 'Must be later than now';
+    }
+
+    return errors;
+  },
 })(InnerEventForm);
 
 const StartButton = styled(Button)`
