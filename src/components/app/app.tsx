@@ -1,4 +1,4 @@
-import {HomeScreen} from '@components';
+import {EventCreateScreen, HomeScreen, TimerScreen} from '@components';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
@@ -9,8 +9,22 @@ const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
     <PaperProvider>
-      <Stack.Navigator headerMode="none">
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator initialRouteName="HomeScreen">
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="HomeScreen"
+          component={HomeScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: true, title: ''}}
+          name="EventCreateScreen"
+          component={EventCreateScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: true, title: ''}}
+          name="TimerScreen"
+          component={TimerScreen}
+        />
       </Stack.Navigator>
     </PaperProvider>
   );
