@@ -1,4 +1,9 @@
-import {EventCreateScreen, HomeScreen, TimerScreen} from '@components';
+import {
+  EventCreateScreen,
+  EventEndedScreen,
+  HomeScreen,
+  TimerScreen,
+} from '@components';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
@@ -24,6 +29,12 @@ const HomeStack = () => {
           options={{headerShown: true, title: ''}}
           name="TimerScreen"
           component={TimerScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: true, title: ''}}
+          name="EventEndedScreen"
+          component={EventEndedScreen}
+          initialParams={{title: 'asdasdqwwd'}}
         />
       </Stack.Navigator>
     </PaperProvider>

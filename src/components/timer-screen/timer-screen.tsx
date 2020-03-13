@@ -1,5 +1,5 @@
 import {getDateTime} from '@helpers';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {Body} from '@ui';
 import moment from 'moment';
 import React, {useCallback} from 'react';
@@ -13,13 +13,15 @@ type ScreenRouteProps = RouteProp<{TimerScreen: ParamsProps}, 'TimerScreen'>;
 const TimerScreen = () => {
   const {params} = useRoute<ScreenRouteProps>();
   const {title, time, date} = params;
+  const {navigate} = useNavigation();
   const dateTimeLabel = moment(getDateTime(date, time)).format(
     'MMM, D YYYY - h:mmA',
   );
 
   const onEnded = useCallback(() => {
-    console.log('Ended');
-  }, []);
+    console.log('onEnded');
+    navigate('EventEndedScreen', {title});
+  }, [title, navigate]);
 
   const {day, hour, minute, second} = useTimer(date, time, onEnded);
 
