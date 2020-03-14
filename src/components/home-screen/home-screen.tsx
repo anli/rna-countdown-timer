@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Body, Button} from '@ui';
+import {Body, FAB} from '@ui';
 import React from 'react';
 import styled from 'styled-components/native';
 
@@ -12,19 +12,11 @@ const HomeScreen = () => {
 
   return (
     <ScreenBody>
-      <CreateButton onPress={onCreate} mode="contained">
-        Create
-      </CreateButton>
+      <FAB icon="plus" onPress={onCreate} />
     </ScreenBody>
   );
 };
 
-const ScreenBody = styled(Body)`
-  justify-content: center;
-  align-items: center;
-`;
-const CreateButton = styled(Button)`
-  position: absolute;
-`;
+const ScreenBody = styled(Body)``;
 
 export default HomeScreen;
