@@ -1,4 +1,4 @@
-import {useCountdownData} from '@helpers';
+import {useCountdownData, useTimer} from '@helpers';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {Body, FAB} from '@ui';
 import moment from 'moment';
@@ -60,18 +60,8 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         data={data}
         renderItem={({item}: {item: DataProps}) => {
-          const {title, dateTimeLabel} = item;
           return (
-            <List.Item
-              right={() => (
-                <>
-                  <IconButton icon="delete" onPress={() => onDelete(item)} />
-                </>
-              )}
-              onPress={() => onView(item)}
-              title={title}
-              description={dateTimeLabel}
-            />
+            <CountdownItem item={item} onDelete={onDelete} onView={onView} />
           );
         }}
         keyExtractor={(item: DataProps) => item.id}
@@ -86,6 +76,29 @@ const ScreenBody = styled(Body)``;
 const CountdownList = styled(FlatList)``;
 
 export default HomeScreen;
+
+const CountdownItem = ({item, onDelete, onView}: any) => {
+  const {title, dateTimeLabel, date, time} = item;
+  const {day, hour, minute, second} = useTimer(date, time);
+
+  return (
+    <List.Item
+      right={() => (
+        <>
+          <IconButton
+            icon="delete"
+            onPress={() => {
+              onDelete(item);
+            }}
+          />
+        </>
+      )}
+      onPress={() => onView(item)}
+      title={title}
+      description={`${dateTimeLabel}\n${day} days ${hour} hours ${minute} mins ${second} seconds`}
+    />
+  );
+};
 
 const getDateTimeLabel = (date: string, time: string | undefined) => {
   const dateTimeString = time ? `${date}T${time}` : date;
