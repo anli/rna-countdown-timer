@@ -25,14 +25,8 @@ const TimeInput = ({
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-
-    if (event.type === 'neutralButtonPressed' && onChangeText) {
-      return onChangeText('');
-    }
-
-    if (selectedDate && onChangeText) {
-      const dataValue = getDataValue(currentDate);
-      return onChangeText(dataValue);
+    if (onChangeText) {
+      onChangeText(getOnChangeTextValue(event.type, selectedDate, date));
     }
   };
 
@@ -67,3 +61,19 @@ const TimeInput = ({
 };
 
 export default TimeInput;
+
+const getOnChangeTextValue = (
+  type: string,
+  selectedDate: Date | undefined,
+  currentDate: Date,
+) => {
+  if (type === 'neutralButtonPressed') {
+    return '';
+  }
+
+  if (selectedDate) {
+    return getDataValue(selectedDate);
+  }
+
+  return getDataValue(currentDate);
+};
