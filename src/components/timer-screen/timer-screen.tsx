@@ -19,7 +19,6 @@ const TimerScreen = () => {
   );
 
   const onEnded = useCallback(() => {
-    console.log('onEnded');
     navigate('EventEndedScreen', {title});
   }, [title, navigate]);
 

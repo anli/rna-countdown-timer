@@ -1,4 +1,4 @@
-import {Button, DateInput, TextInput, TimeInput} from '@ui';
+import {Button, TextInput, TimeInput} from '@ui';
 import {FormikErrors, FormikProps, withFormik} from 'formik';
 import moment, {Moment} from 'moment';
 import * as R from 'ramda';
@@ -52,12 +52,16 @@ const InnerEventForm = (
         <HelperText type="error">{errors.title}</HelperText>
       )}
 
-      <DateInput
+      <TimeInput
         placeholder="Date"
         onChangeText={handleChange('date')}
         value={values.date}
         onBlur={handleBlur('date')}
         error={touched.date && errors.date}
+        type="date"
+        dataFormat="YYYY-MM-DD"
+        presentFormat="DD/MM/YYYY"
+        dateTimePickerProps={{minimumDate: new Date()}}
       />
       {touched.date && errors.date && (
         <HelperText type="error">{errors.date}</HelperText>
@@ -69,6 +73,10 @@ const InnerEventForm = (
         value={values.time}
         onBlur={handleBlur('time')}
         error={touched.time && errors.time}
+        type="time"
+        dateTimePickerProps={{neutralButtonLabel: 'clear', is24Hour: false}}
+        dataFormat="HH:mm"
+        presentFormat="h:mmA"
       />
       {touched.time && errors.time && (
         <HelperText type="error">{errors.time}</HelperText>

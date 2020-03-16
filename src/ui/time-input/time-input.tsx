@@ -4,19 +4,45 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import {Platform, TextInputProps} from 'react-native';
 
-const getDataValue = (date: Date): string =>
-  moment(date)
-    .milliseconds(0)
-    .format('HH:mm');
+const getDataValue = (
+  date: Date,
+  dataFormat: string,
+  mode: 'date' | 'time',
+): string => {
+  if (mode === 'time') {
+    return moment(date)
+      .milliseconds(0)
+      .format(dataFormat);
+  }
 
-const getPresentValue = (value?: string): string =>
-  value ? moment(value, 'HH:mm').format('h:mmA') : '';
+  return moment(date)
+    .hours(0)
+    .seconds(0)
+    .milliseconds(0)
+    .format(dataFormat);
+};
+
+const getPresentValue = (
+  value: string | undefined,
+  dataFormat: string,
+  presentFormat: string,
+): string => (value ? moment(value, dataFormat).format(presentFormat) : '');
 
 const TimeInput = ({
   onChangeText,
   value,
+  type,
+  dateTimePickerProps,
+  dataFormat,
+  presentFormat,
   ...props
-}: TextInputProps & {error: string | false | undefined}) => {
+}: TextInputProps & {
+  dataFormat: string;
+  presentFormat: string;
+  dateTimePickerProps: any;
+  type: 'date' | 'time';
+  error: string | false | undefined;
+}) => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState<'date' | 'time'>('date');
   const [show, setShow] = useState(false);
@@ -26,7 +52,9 @@ const TimeInput = ({
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
     if (onChangeText) {
-      onChangeText(getOnChangeTextValue(event.type, selectedDate, date));
+      onChangeText(
+        getOnChangeTextValue(event.type, selectedDate, date, dataFormat, mode),
+      );
     }
   };
 
@@ -35,25 +63,25 @@ const TimeInput = ({
     setMode(currentMode);
   };
 
-  const onShowTimePicker = () => {
-    showMode('time');
+  const onShowPicker = () => {
+    showMode(type);
   };
 
   return (
     <>
       <ButtonTextInput
-        onPress={onShowTimePicker}
+        onPress={onShowPicker}
         {...props}
-        value={getPresentValue(value)}
+        value={getPresentValue(value, dataFormat, presentFormat)}
       />
       {show && (
         <DateTimePicker
           value={date}
           mode={mode}
-          is24Hour={false}
           display="default"
           onChange={onChange}
           neutralButtonLabel="clear"
+          {...dateTimePickerProps}
         />
       )}
     </>
@@ -66,14 +94,16 @@ const getOnChangeTextValue = (
   type: string,
   selectedDate: Date | undefined,
   currentDate: Date,
+  dataFormat: string,
+  mode: 'date' | 'time',
 ) => {
   if (type === 'neutralButtonPressed') {
     return '';
   }
 
   if (selectedDate) {
-    return getDataValue(selectedDate);
+    return getDataValue(selectedDate, dataFormat, mode);
   }
 
-  return getDataValue(currentDate);
+  return getDataValue(currentDate, dataFormat, mode);
 };
